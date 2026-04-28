@@ -1,18 +1,37 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
-import Home from "./pages/Home";
-import Active from "./pages/Active";
-import Completed from "./pages/Completed";
+import { useEffect, useState } from "react";
+import TodoPage from "./pages/TodoPage";
+
+const STORAGE_KEY = "zerobase-todos";
+
+const defaultTodos = [
+  { id: 1, text: "Eat", completed: false },
+  { id: 2, text: "Sleep", completed: false },
+  { id: 3, text: "Repeat", completed: false },
+];
 
 function App() {
-  const [todos, setTodos] = useState([
-    { id: 1, text: "Eat", completed: false },
-    { id: 2, text: "Sleep", completed: false },
-    { id: 3, text: "Repeat", completed: false },
-  ]);
+  const [todos, setTodos] = useState(() => {
+    const savedTodos = localStorage.getItem(STORAGE_KEY);
+
+    if (!savedTodos) return defaultTodos;
+
+    try {
+      const parsed = JSON.parse(savedTodos);
+      return Array.isArray(parsed) ? parsed : defaultTodos;
+    } catch (error) {
+      return defaultTodos;
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+  }, [todos]);
 
   const addTodo = (text) => {
     const trimmed = text.trim();
+
+    // 빈칸 입력 방지
     if (!trimmed) return;
 
     const newTodo = {
@@ -38,13 +57,16 @@ function App() {
 
   const updateTodo = (id, newText) => {
     const trimmed = newText.trim();
-    if (!trimmed) return;
+
+    if (!trimmed) return false;
 
     setTodos((prev) =>
       prev.map((item) =>
         item.id === id ? { ...item, text: trimmed } : item
       )
     );
+
+    return true;
   };
 
   return (
@@ -53,7 +75,8 @@ function App() {
         <Route
           path="/"
           element={
-            <Home
+            <TodoPage
+              type="all"
               todos={todos}
               addTodo={addTodo}
               deleteTodo={deleteTodo}
@@ -65,8 +88,10 @@ function App() {
         <Route
           path="/active"
           element={
-            <Active
+            <TodoPage
+              type="active"
               todos={todos}
+              addTodo={addTodo}
               deleteTodo={deleteTodo}
               toggleTodo={toggleTodo}
               updateTodo={updateTodo}
@@ -76,8 +101,10 @@ function App() {
         <Route
           path="/completed"
           element={
-            <Completed
+            <TodoPage
+              type="completed"
               todos={todos}
+              addTodo={addTodo}
               deleteTodo={deleteTodo}
               toggleTodo={toggleTodo}
               updateTodo={updateTodo}

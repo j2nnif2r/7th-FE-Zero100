@@ -162,3 +162,17 @@ input {
 .filter-link .button {
   width: 100%;
 }
+.input:focus {
+  outline: none;
+  border-color: #111;
+}
+
+.empty-text {
+  text-align: center;
+  color: #777;
+  padding: 16px 0 8px;
+}
+
+.todo-text {
+  flex: 1;
+}
