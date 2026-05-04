@@ -1,119 +1,27 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect, useState } from "react";
-import TodoPage from "./pages/TodoPage";
+import { Routes, Route, Navigate } from 'react-router-dom'
+import LoginPage from './pages/LoginPage'
+import SignupPage from './pages/SignupPage'
+import DashboardLayout from './pages/DashboardLayout'
+import DashboardHome from './pages/DashboardHome'
+import InquiryList from './pages/InquiryList'
+import InquiryNew from './pages/InquiryNew'
+import InquiryDetail from './pages/InquiryDetail'
+import MyPage from './pages/MyPage'
 
-const STORAGE_KEY = "zerobase-todos";
-
-const defaultTodos = [
-  { id: 1, text: "Eat", completed: false },
-  { id: 2, text: "Sleep", completed: false },
-  { id: 3, text: "Repeat", completed: false },
-];
-
-function App() {
-  const [todos, setTodos] = useState(() => {
-    const savedTodos = localStorage.getItem(STORAGE_KEY);
-
-    if (!savedTodos) return defaultTodos;
-
-    try {
-      const parsed = JSON.parse(savedTodos);
-      return Array.isArray(parsed) ? parsed : defaultTodos;
-    } catch (error) {
-      return defaultTodos;
-    }
-  });
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
-  }, [todos]);
-
-  const addTodo = (text) => {
-    const trimmed = text.trim();
-
-    // 빈칸 입력 방지
-    if (!trimmed) return;
-
-    const newTodo = {
-      id: Date.now(),
-      text: trimmed,
-      completed: false,
-    };
-
-    setTodos((prev) => [...prev, newTodo]);
-  };
-
-  const deleteTodo = (id) => {
-    setTodos((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const toggleTodo = (id) => {
-    setTodos((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, completed: !item.completed } : item
-      )
-    );
-  };
-
-  const updateTodo = (id, newText) => {
-    const trimmed = newText.trim();
-
-    if (!trimmed) return false;
-
-    setTodos((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, text: trimmed } : item
-      )
-    );
-
-    return true;
-  };
-
+export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <TodoPage
-              type="all"
-              todos={todos}
-              addTodo={addTodo}
-              deleteTodo={deleteTodo}
-              toggleTodo={toggleTodo}
-              updateTodo={updateTodo}
-            />
-          }
-        />
-        <Route
-          path="/active"
-          element={
-            <TodoPage
-              type="active"
-              todos={todos}
-              addTodo={addTodo}
-              deleteTodo={deleteTodo}
-              toggleTodo={toggleTodo}
-              updateTodo={updateTodo}
-            />
-          }
-        />
-        <Route
-          path="/completed"
-          element={
-            <TodoPage
-              type="completed"
-              todos={todos}
-              addTodo={addTodo}
-              deleteTodo={deleteTodo}
-              toggleTodo={toggleTodo}
-              updateTodo={updateTodo}
-            />
-          }
-        />
-      </Routes>
-    </BrowserRouter>
-  );
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/" element={<DashboardLayout />}>
+        <Route index element={<Navigate to="/dashboard" replace />} />
+        <Route path="dashboard" element={<DashboardHome />} />
+        <Route path="inquiry" element={<InquiryList />} />
+        <Route path="inquiry/new" element={<InquiryNew />} />
+        <Route path="inquiry/:id" element={<InquiryDetail />} />
+        <Route path="mypage" element={<MyPage />} />
+      </Route>
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
+  )
 }
-
-export default App;
