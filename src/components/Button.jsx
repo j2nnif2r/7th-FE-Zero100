@@ -1,10 +1,11 @@
-function Button({ children, onClick, type = "button", variant = "default" }) {
+function Button({
+  children,
+  onClick,
+  type = "button",
+  variant = "default",
+}) {
   return (
-    <button
-      type={type}
-      onClick={onClick}
-      className={`button ${variant}`}
-    >
+    <button type={type} onClick={onClick} className={`button ${variant}`}>
       {children}
     </button>
   );

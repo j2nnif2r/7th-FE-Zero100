@@ -63,6 +63,11 @@ input {
   border-radius: 4px;
   height: 42px;
   cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.button:hover {
+  opacity: 0.92;
 }
 
 .button.add {
@@ -120,6 +125,7 @@ input {
 
 .todo-text {
   font-size: 16px;
+  word-break: break-word;
 }
 
 .todo-text.completed {
@@ -143,15 +149,11 @@ input {
   background-color: #ff2d2d;
   color: white;
 }
+
 .todo-top .input {
   flex: 1;
 }
 
-.todo-top {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 .filter-link {
   flex: 1;
   text-decoration: none;
