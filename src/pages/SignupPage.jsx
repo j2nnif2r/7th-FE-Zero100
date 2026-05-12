@@ -13,9 +13,24 @@ export default function SignupPage() {
   const validate = () => {
     const newErrors = {}
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) newErrors.email = '올바른 이메일 형식을 입력하세요'
-    if (password.length < 8) newErrors.password = '8자 이상, 영문/숫자/특수문자 포함'
-    if (passwordConfirm.length < 2) newErrors.passwordConfirm = '2자 이상 입력하세요'
+
+    if (!emailRegex.test(email)) {
+      newErrors.email = '올바른 이메일 형식을 입력하세요'
+    }
+
+    if (password.length < 8) {
+      newErrors.password = '8자 이상, 영문/숫자/특수문자 포함'
+    }
+
+    if (passwordConfirm.length < 2) {
+      newErrors.passwordConfirm = '2자 이상 입력하세요'
+    }
+
+    // 비밀번호 일치 여부 검사
+    if (password && passwordConfirm && password !== passwordConfirm) {
+      newErrors.passwordConfirm = '비밀번호가 일치하지 않습니다'
+    }
+
     return newErrors
   }
 
@@ -51,7 +66,7 @@ export default function SignupPage() {
           />
           <TextInput
             type="password"
-            placeholder="비밀번호를 입력하세요"
+            placeholder="비밀번호를 다시 입력하세요"
             value={passwordConfirm}
             onChange={(e) => setPasswordConfirm(e.target.value)}
             error={errors.passwordConfirm}
