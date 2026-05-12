@@ -1,14 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect, useState } from "react";
-import TodoPage from "./pages/TodoPage";
 
-const STORAGE_KEY = "zerobase-todos";
-
-const defaultTodos = [
-  { id: 1, text: "Eat", completed: false },
-  { id: 2, text: "Sleep", completed: false },
-  { id: 3, text: "Repeat", completed: false },
 ];
+
+import { useState } from "react";
+import Home from "./pages/Home";
+import Active from "./pages/Active";
+import Completed from "./pages/Completed";
+
 
 function App() {
   const [todos, setTodos] = useState(() => {
@@ -69,14 +67,51 @@ function App() {
     return true;
   };
 
+  const addTodo = (text) => {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+
+    const newTodo = {
+      id: Date.now(),
+      text: trimmed,
+      completed: false,
+    };
+
+    setTodos((prev) => [...prev, newTodo]);
+  };
+
+  const deleteTodo = (id) => {
+    setTodos((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const toggleTodo = (id) => {
+    setTodos((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, completed: !item.completed } : item
+      )
+    );
+  };
+
+  const updateTodo = (id, newText) => {
+    const trimmed = newText.trim();
+    if (!trimmed) return;
+
+    setTodos((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, text: trimmed } : item
+      )
+    );
+  };
+
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path="/"
           element={
-            <TodoPage
-              type="all"
+
+            <Home
+
               todos={todos}
               addTodo={addTodo}
               deleteTodo={deleteTodo}
@@ -88,10 +123,11 @@ function App() {
         <Route
           path="/active"
           element={
-            <TodoPage
-              type="active"
+
+
+            <Active
               todos={todos}
-              addTodo={addTodo}
+
               deleteTodo={deleteTodo}
               toggleTodo={toggleTodo}
               updateTodo={updateTodo}
@@ -101,10 +137,11 @@ function App() {
         <Route
           path="/completed"
           element={
-            <TodoPage
-              type="completed"
+
+
+            <Completed
               todos={todos}
-              addTodo={addTodo}
+
               deleteTodo={deleteTodo}
               toggleTodo={toggleTodo}
               updateTodo={updateTodo}

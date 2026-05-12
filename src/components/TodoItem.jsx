@@ -1,23 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Button from "./Button";
 import Checkbox from "./Checkbox";
+import Input from "./Input";
+
 
 function TodoItem({ item, onDelete, onToggle, onUpdate }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(item.text);
-  const inputRef = useRef(null);
-
-  useEffect(() => {
-    if (isEditing && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [isEditing]);
-
-  useEffect(() => {
-    if (!isEditing) {
-      setEditText(item.text);
-    }
-  }, [item.text, isEditing]);
 
   const startEdit = () => {
     setIsEditing(true);
@@ -30,15 +19,24 @@ function TodoItem({ item, onDelete, onToggle, onUpdate }) {
   };
 
   const saveEdit = () => {
-    const isUpdated = onUpdate(item.id, editText);
-    if (isUpdated) {
-      setIsEditing(false);
-    }
+
+
+    const trimmed = editText.trim();
+    if (!trimmed) return;
+
+    onUpdate(item.id, trimmed);
+    setIsEditing(false);
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") saveEdit();
-    if (e.key === "Escape") cancelEdit();
+    if (e.key === "Enter") {
+      saveEdit();
+    }
+
+    if (e.key === "Escape") {
+      cancelEdit();
+    }
+
   };
 
   return (
@@ -47,13 +45,13 @@ function TodoItem({ item, onDelete, onToggle, onUpdate }) {
         <Checkbox checked={item.completed} onChange={() => onToggle(item.id)} />
 
         {isEditing ? (
-          <input
-            ref={inputRef}
-            className="input"
+
+          <Input
             value={editText}
             onChange={(e) => setEditText(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={`New name for ${item.text}`}
+            placeholder="Edit task"
+
           />
         ) : (
           <span className={item.completed ? "todo-text completed" : "todo-text"}>
