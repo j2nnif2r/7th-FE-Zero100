@@ -1,3 +1,5 @@
+
+
 import { Link } from "react-router-dom";
 import Button from "../components/Button";
 import Text from "../components/Text";
@@ -39,6 +41,7 @@ function Completed({ todos, deleteTodo, toggleTodo, updateTodo }) {
       </div>
     </div>
   );
+
 }
 
 export default Completed;

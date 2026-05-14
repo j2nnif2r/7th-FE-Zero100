@@ -3,6 +3,7 @@ import Button from "./Button";
 import Checkbox from "./Checkbox";
 import Input from "./Input";
 
+
 function TodoItem({ item, onDelete, onToggle, onUpdate }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(item.text);
@@ -18,6 +19,8 @@ function TodoItem({ item, onDelete, onToggle, onUpdate }) {
   };
 
   const saveEdit = () => {
+
+
     const trimmed = editText.trim();
     if (!trimmed) return;
 
@@ -33,6 +36,7 @@ function TodoItem({ item, onDelete, onToggle, onUpdate }) {
     if (e.key === "Escape") {
       cancelEdit();
     }
+
   };
 
   return (
@@ -41,11 +45,13 @@ function TodoItem({ item, onDelete, onToggle, onUpdate }) {
         <Checkbox checked={item.completed} onChange={() => onToggle(item.id)} />
 
         {isEditing ? (
+
           <Input
             value={editText}
             onChange={(e) => setEditText(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Edit task"
+
           />
         ) : (
           <span className={item.completed ? "todo-text completed" : "todo-text"}>

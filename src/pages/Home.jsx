@@ -62,6 +62,7 @@ function Home({ todos, addTodo, deleteTodo, toggleTodo, updateTodo }) {
       </div>
     </div>
   );
+
 }
 
 export default Home;
